@@ -7,6 +7,7 @@ Inspired by the location service what3words (http://what3words.com/)
 
 ### IPv4 Examples
 
+<del>
 * 4.4.4.4         <> air.air.air.air
 * 8.8.8.8         <> bad.bad.bad.bad
 * 85.255.235.228  <> find.exact.datum.clear
@@ -14,3 +15,4 @@ Inspired by the location service what3words (http://what3words.com/)
 * 192.168.0.1     <> allow.wall.act.add
 * 206.67.222.222  <> began.deem.cheap.cheap
 * 255.255.255.0   <> exact.exact.exact.act
+</del>

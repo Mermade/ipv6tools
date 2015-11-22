@@ -27,6 +27,30 @@ Array.prototype.remove = function(from, to) {
   return this.push.apply(this, rest);
 };
 
+function binarySearch(list, item) {
+    var min = 0;
+    var max = list.length - 1;
+    var guess;
+
+    while (min <= max) {
+        guess = Math.floor((min + max) / 2);
+
+        if (list[guess] === item) {
+            return guess;
+        }
+        else {
+            if (list[guess] < item) {
+                min = guess + 1;
+            }
+            else {
+                max = guess - 1;
+            }
+        }
+    }
+
+    return -1;
+}
+
 var limit =  Number.MAX_SAFE_INTEGER;
 
 if (process.argv.length>2) {
@@ -51,11 +75,13 @@ if (process.argv.length>2) {
 
 	console.log('Removing plurals and lowercasing');
 	nounInflector = new natural.NounInflector();
+	var orig = '';
+	var singular = '';
 	for (var i=0;i<input.length;i++) {
 		orig = input[i];
 		singular = nounInflector.singularize(orig);
-		locn = input.indexOf(singular);
-		if (locn>=0) { //check each singular is actually a valid word in the original list
+		//check each singular is actually a valid word in the original list
+		if (binarySearch(input,singular)>=0) {
 			input[i]=singular;
 		}
 		input[i] = input[i].toLocaleLowerCase();
@@ -68,6 +94,7 @@ if (process.argv.length>2) {
 
 	var parsed = [];
 
+	//http://stackoverflow.com/questions/10554052/what-are-the-major-differences-and-benefits-of-porter-and-lancaster-stemming-alg
 	//var stemmer = natural.LancasterStemmer;
 	var stemmer = natural.PorterStemmer;
 
@@ -76,10 +103,10 @@ if (process.argv.length>2) {
 		stem.push(stemmer.stem(entry));
 	});
 
+	var result = '';
 	input.forEach(function(entry,index) {
 		result = stemmer.stem(entry);
-		locn = stem.indexOf(result);
-		if (locn == index) { //check is first usage of this stem
+		if (binarySearch(stem,result) == index) { //check is first usage of this stem
 			parsed.push(entry);
 		}
 	});
@@ -100,30 +127,72 @@ if (process.argv.length>2) {
 	});
 
 	var output = [];
+	var result = [];
+	var metastr = '';
+	var oldmeta = '*';
+	var i = 0;
+
+	console.log('Removing homophones..');
 	parsed.forEach(function(entry,index) {
 		result = metaphone.process(entry).sort();
-		locn = meta.indexOf(result[0]+'+'+result[1]);
-		if (locn==index) { //check we are the first use of this phonetic string
+	    metastr = result[0]+'+'+result[1];
+		if (metastr!=oldmeta) {
+			i=0;
+			while ((meta[i]!=metastr) && (i<=index)) i++;
+		}
+		else {
+			oldmeta=metastr;
+		}
+		if (i==index) { //check we are the first use of this phonetic string
 			output.push(entry);
 		}
 	});
 	console.log('After metaphoning to remove homophones: '+output.length);
+	parsed = [];
 
 	output.sort(function(a,b){
 		return (cmp(a.length,b.length) || cmp(a,b));
 	});
 
+	// after this point binarySearch won't work
+
+	var maxlen = 0;
+	var top = 0;
+	while (top<output.length) {
+		if (top<=limit) maxlen = output[top].length;
+		if (output[top].length>maxlen) {
+			//console.log('Stopping at '+top);
+			break;
+		}
+		else {
+			top++;
+		}
+	}
+	console.log('Words of length '+maxlen+' end at '+top);
+
+	nth = 1;
+	skip = 1;
 	if (output.length<limit) {
 		console.log('Not enough words in dictionary to meet requirement');
 	}
+	if (output.length>=top) {
+		nth = limit/top;
+		skip = (1.0/nth);
+		console.log('Outputting every '+skip+' word, using '+nth);
+	}
 
-	var maxlen = 0;
+	var total = 0.0;
+	var count = 0;
 	filename = './dict/words'+limit;
 	ws = fs.createWriteStream(filename);
 	ws.once('open', function(fd) {
-		for (var i=0;i<Math.min(output.length,limit);i++) {
-			ws.write(output[i]+'\n');
-			maxlen = output[i].length;
+		for (var i=0;i<Math.min(output.length,top);i++) {
+			total+=nth;
+			//console.log(total+' at '+i)
+			if ((Math.floor(total)>=count) && (count<limit)) {
+				ws.write(output[i]+'\n');
+				count++;
+			}
 		}
 		ws.end();
 		console.log('Requires max word length of '+maxlen);
