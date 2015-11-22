@@ -10,8 +10,8 @@ function uniq(a) {
 
 function tidy(a) {
 	return a.filter(function(item) {
-		return ((item.length>=3) && (item.indexOf("'")<0));
-		// && (item.substr(0,1).toLocaleLowerCase==item.substr(0,1)));
+		return ((item.length>=3) && (item.indexOf("'")<0)
+			&& (item.substr(0,1).toLocaleLowerCase()==item.substr(0,1)));
 	});
 }
 
@@ -33,7 +33,6 @@ if (process.argv.length>2) {
 
 	if (process.argv.length>3) {
 		limit = parseInt(process.argv[3],10);
-		console.log(limit);
 	}
 
 	var infile = process.argv[2];

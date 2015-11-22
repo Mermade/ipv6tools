@@ -1,8 +1,8 @@
 var fs = require('fs');
 var crypto = require('crypto');
 
-const sha1 = 'f607be85dfea2cdb666f9761bf04f5de398bb8cd';
-const ERR_WYTAW = "Watchoo talkin about Willis?";
+const sha1 = 'cc60d9312cfc12e28bf06917c6425e04745fc198';
+const ERR_WYTAW = "Watchoo talkin' about Willis?";
 
 var input = [];
 
