@@ -3,6 +3,8 @@ A nodejs-based utiity to translate ipv6 addresses to and from simple English phr
 
 These are hoped to be easier to remember, easier to call out across a busy server-room and shorter in terms of syllables.
 
+Inspired by the location service what3words (http://what3words.com/)
+
 ### IPv4 Examples
 
 * 4.4.4.4         <> air.air.air.air
