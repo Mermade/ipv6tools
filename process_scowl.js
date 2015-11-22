@@ -92,6 +92,7 @@ if (process.argv.length>2) {
 	input.sort();
 	console.log('After singularising and removing duplicates: '+input.length);
 
+	console.log('Removing items suffixing an existing stem...');
 	var parsed = [];
 
 	//http://stackoverflow.com/questions/10554052/what-are-the-major-differences-and-benefits-of-porter-and-lancaster-stemming-alg
@@ -113,7 +114,7 @@ if (process.argv.length>2) {
 	input = []; // no longer required
 	console.log('After removing common stems: '+parsed.length);
 
-	//-- check for homophones using a phonetic algorithm
+	console.log('Removing homophones...');
 
 	//var metaphone = natural.SoundEx;
 	//var metaphone = natural.Metaphone;
@@ -132,15 +133,11 @@ if (process.argv.length>2) {
 	var oldmeta = '*';
 	var i = 0;
 
-	console.log('Removing homophones..');
 	parsed.forEach(function(entry,index) {
-		result = metaphone.process(entry).sort();
-	    metastr = result[0]+'+'+result[1];
+		metastr=meta[index];
 		if (metastr!=oldmeta) {
 			i=0;
 			while ((meta[i]!=metastr) && (i<=index)) i++;
-		}
-		else {
 			oldmeta=metastr;
 		}
 		if (i==index) { //check we are the first use of this phonetic string
@@ -161,7 +158,6 @@ if (process.argv.length>2) {
 	while (top<output.length) {
 		if (top<=limit) maxlen = output[top].length;
 		if (output[top].length>maxlen) {
-			//console.log('Stopping at '+top);
 			break;
 		}
 		else {
@@ -177,8 +173,9 @@ if (process.argv.length>2) {
 	}
 	if (output.length>=top) {
 		nth = limit/top;
-		skip = (1.0/nth);
-		console.log('Outputting every '+skip+' word, using '+nth);
+		skip = (1.0/nth).toFixed(2);
+		countInflector = natural.CountInflector;
+		console.log('Outputting every '+countInflector.nth(skip)+' word');
 	}
 
 	var total = 0.0;
@@ -188,7 +185,6 @@ if (process.argv.length>2) {
 	ws.once('open', function(fd) {
 		for (var i=0;i<Math.min(output.length,top);i++) {
 			total+=nth;
-			//console.log(total+' at '+i)
 			if ((Math.floor(total)>=count) && (count<limit)) {
 				ws.write(output[i]+'\n');
 				count++;
