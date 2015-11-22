@@ -49,6 +49,7 @@ if (process.argv.length>2) {
 	input = tidy(input);
 	console.log('After removing 1/2-letter words, proper nouns, possessives/contractions: '+input.length);
 
+	console.log('Removing plurals and lowercasing');
 	nounInflector = new natural.NounInflector();
 	for (var i=0;i<input.length;i++) {
 		orig = input[i];
@@ -58,17 +59,17 @@ if (process.argv.length>2) {
 			input[i]=singular;
 		}
 		input[i] = input[i].toLocaleLowerCase();
-		//if (input[i]!=orig) {
-		//	console.log(orig+' > '+input[i]);
-		//}
 	}
+	console.log('Removing duplicates...');
 	input = uniq(input);
+	console.log('Sorting...');
 	input.sort();
 	console.log('After singularising and removing duplicates: '+input.length);
 
 	var parsed = [];
 
-	var stemmer = natural.PorterStemmer; //natural.LancasterStemmer;
+	//var stemmer = natural.LancasterStemmer;
+	var stemmer = natural.PorterStemmer;
 
 	var stem = [];
 	input.forEach(function(entry){
@@ -77,16 +78,10 @@ if (process.argv.length>2) {
 
 	input.forEach(function(entry,index) {
 		result = stemmer.stem(entry);
-		//if (result!=entry) {
-		//	console.log(result+' < '+entry)
-		//}
 		locn = stem.indexOf(result);
 		if (locn == index) { //check is first usage of this stem
 			parsed.push(entry);
 		}
-		//else {
-		//	console.log('Omitting '+entry+' at '+index+' because '+result+' occurs at '+locn);
-		//}
 	});
 	input = []; // no longer required
 	console.log('After removing common stems: '+parsed.length);
@@ -111,9 +106,6 @@ if (process.argv.length>2) {
 		if (locn==index) { //check we are the first use of this phonetic string
 			output.push(entry);
 		}
-		//else {
-		//	console.log(entry+' and '+parsed[locn]+' are homophones');
-		//}
 	});
 	console.log('After metaphoning to remove homophones: '+output.length);
 
