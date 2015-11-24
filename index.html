@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-dark.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <title>Ipv6tools by Mermade</title>
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <h1>Ipv6tools</h1>
+        <h2>A nodejs-based utiity to translate ipv6 addresses to and from simple English phrases</h2>
+
+        <section id="downloads">
+          <a href="https://github.com/Mermade/ipv6tools/zipball/master" class="btn">Download as .zip</a>
+          <a href="https://github.com/Mermade/ipv6tools/tarball/master" class="btn">Download as .tar.gz</a>
+          <a href="https://github.com/Mermade/ipv6tools" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <h1>
+<a id="ipv6tools" class="anchor" href="#ipv6tools" aria-hidden="true"><span class="octicon octicon-link"></span></a>ipv6tools</h1>
+
+<p>A nodejs-based utiity to translate ipv6 addresses to and from simple English phrases</p>
+
+<p>These are hoped to be easier to remember, easier to call out across a busy server-room and shorter in terms of syllables.</p>
+
+<p>Inspired by the location service <a href="http://what3words.com/">what3words</a></p>
+
+<h3>
+<a id="ipv4-examples" class="anchor" href="#ipv4-examples" aria-hidden="true"><span class="octicon octicon-link"></span></a>IPv4 Examples</h3>
+
+<pre><code>4.4.4.4         &lt;&gt; art.art.art.art
+8.8.8.8         &lt;&gt; can.can.can.can
+85.255.235.228  &lt;&gt; pipe.worst.stone.speed
+127.0.0.1       &lt;&gt; badly.ago.ago.aid [*]
+192.168.0.1     &lt;&gt; moved.going.ago.aid
+206.67.222.222  &lt;&gt; prior.just.short.short
+255.255.255.0   &lt;&gt; worst.worst.worst.ago
+</code></pre>
+
+<p>[*] In practice, localhost is used</p>
+
+<p>The IPv4 lookup table is just 1.4Kb uncompressed.
+Natural language tools are used to process wordlists to remove words with common stems, plurals, proper nouns and homophones.</p>
+
+<p>The wordlists (from <a href="http://wordlist.aspell.net/">SCOWL</a> and the pre-processor are included)</p>
+      </section>
+    </div>
+
+    
+  </body>
+</html>
